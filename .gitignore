@@ -3,7 +3,9 @@ __localcode
 chromedriver
 mysql_206
 static_files
-static/
+Secao10/static/
+Secao09/aula207/base/static/
+Secao12/data
 media/
 /data/
 
