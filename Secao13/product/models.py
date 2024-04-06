@@ -4,6 +4,7 @@ from PIL import Image
 from django.conf import settings  # type: ignore
 from django.db import models  # type: ignore
 from utils.rands import slugify_new
+from utils import utils
 
 
 class Product(models.Model):
@@ -30,12 +31,12 @@ class Product(models.Model):
     )
 
     def get_formatted_price(self):
-        return f'R$ {self.marketing_price:.2f}'.replace(',', ',')
+        return utils.format_price(self.marketing_price)
 
     get_formatted_price.short_description = 'Price'  # type:ignore
 
     def get_formatted_promotional_price(self):
-        return f'R$ {self.promotional_marketing_price:.2f}'.replace(',', ',')
+        return utils.format_price(self.promotional_marketing_price)
 
     get_formatted_promotional_price.short_description = 'Promotional Price'  # type:ignore  # noqa - E501
 
