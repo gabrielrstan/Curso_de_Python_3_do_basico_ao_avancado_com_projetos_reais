@@ -3,6 +3,7 @@ import os
 from PIL import Image
 from django.conf import settings  # type: ignore
 from django.db import models  # type: ignore
+from utils.rands import slugify_new
 
 
 class Product(models.Model):
@@ -12,20 +13,31 @@ class Product(models.Model):
 
     name = models.CharField(max_length=255)
     short_description = models.TextField(max_length=255)
-    long_description = models.TextField(max_length=255)
+    long_description = models.TextField(max_length=2000)
     image = models.ImageField(
         upload_to='product_image/%y/%m/', blank=True, null=True)
-    slug = models.SlugField(unique=True)
-    marketing_price = models.FloatField()
-    promotional_marketing_price = models.FloatField(default=0)
+    slug = models.SlugField(unique=True, blank=True, null=True)
+    marketing_price = models.FloatField(verbose_name='Price')
+    promotional_marketing_price = models.FloatField(
+        default=0, verbose_name='Promotional Price')
     type = models.CharField(
         default='V',
         max_length=1,
         choices=(
-            ('V', 'Variation'),
+            ('V', 'Variable'),
             ('S', 'Simple'),
         )
     )
+
+    def get_formatted_price(self):
+        return f'R$ {self.marketing_price:.2f}'.replace(',', ',')
+
+    get_formatted_price.short_description = 'Price'  # type:ignore
+
+    def get_formatted_promotional_price(self):
+        return f'R$ {self.promotional_marketing_price:.2f}'.replace(',', ',')
+
+    get_formatted_promotional_price.short_description = 'Promotional Price'  # type:ignore  # noqa - E501
 
     @staticmethod
     def resize_image(img, image, new_width=800):
@@ -44,6 +56,9 @@ class Product(models.Model):
         new_img.save(img_full_path, optimize=True, quality=60)
 
     def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = slugify_new(self.name, 4)
+
         super().save(*args, **kwargs)
 
         max_image_size = (800)

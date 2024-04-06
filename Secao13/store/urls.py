@@ -21,6 +21,9 @@ from django.urls import include, path  # type: ignore
 from django.conf.urls.static import static  # type:ignore
 
 urlpatterns = [
+    path('', include('product.urls')),
+    path('user/', include('user.urls')),
+    path('order/', include('order.urls')),
     path('admin/', admin.site.urls),
     path("__debug__/", include("debug_toolbar.urls")),
 ]

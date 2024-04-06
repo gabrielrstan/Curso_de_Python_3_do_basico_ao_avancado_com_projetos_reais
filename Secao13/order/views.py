@@ -1,3 +1,14 @@
-from django.shortcuts import render
+# from django.shortcuts import render  # type: ignore
+from django.views import View  # type: ignore
 
-# Create your views here.
+
+class Pay(View):
+    ...
+
+
+class CloseOrder(View):
+    ...
+
+
+class Detail(View):
+    ...
