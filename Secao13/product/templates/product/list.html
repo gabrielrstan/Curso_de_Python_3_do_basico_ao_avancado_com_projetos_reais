@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% load omfilters %}
+{% load filters %}
 
 {% block content %}
     <div class="row">
@@ -15,7 +15,7 @@
                         {% endif %}
                         <div class="card-body">
                             <h5 class="card-title">{{product.name}}</h5>
-                            <p class="card-text">{{product.short_description}}</p>
+                            <p class="card-text">{{product.short_description | linebreaks}}</p>
                             <div class="container product-price-block text-center">
                                 {% if product.promotional_marketing_price %}
                                     <span class="product-price">
