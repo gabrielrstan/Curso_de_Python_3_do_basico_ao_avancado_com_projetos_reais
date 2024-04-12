@@ -1,7 +1,9 @@
-from django.shortcuts import render, get_object_or_404  # type: ignore
+from django.shortcuts import (render, get_object_or_404,  # type: ignore
+                              redirect)
 from django.views import View  # type: ignore
 from django.contrib.auth.models import User  # type: ignore
-from django.contrib.auth import authenticate, login  # type: ignore
+from django.contrib.auth import authenticate, login, logout  # type: ignore
+from django.contrib import messages  # type: ignore
 from user.forms import UserForm, ProfileForm
 from user.models import Profile
 import copy
@@ -47,8 +49,11 @@ class ProfileBase(View):
 
 class Create(ProfileBase):
     def post(self, *args, **kwargs):
-        # if not self.userform.is_valid() or not self.profileform.is_valid():
-        if not self.userform.is_valid():
+        if not self.userform.is_valid() or not self.profileform.is_valid():
+            messages.error(
+                self.request,
+                'Por favor, preencha os campos corretamente.'
+            )
             return self.render
 
         username = self.userform.cleaned_data.get('username')
@@ -97,7 +102,11 @@ class Create(ProfileBase):
 
         self.request.session['cart'] = self.cart
         self.request.session.save()
-        return self.render
+
+        messages.success(self.request,
+                         'Seu cadastro foi criado ou atualizado com sucesso')
+
+        return redirect('product:cart')
 
 
 class Update(View):
@@ -105,8 +114,36 @@ class Update(View):
 
 
 class Login(View):
-    ...
+    def post(self, *args, **kwargs):
+        username = self.request.POST.get('username')
+        password = self.request.POST.get('password')
+
+        if not username or not password:
+            messages.error(self.request, 'Usuário ou senha inválidos')
+            return redirect('user:create')
+
+        user = authenticate(
+            self.request, username=username, password=password)
+
+        if not user:
+            messages.error(self.request, 'Usuário ou senha inválidos')
+            return redirect('user:create')
+
+        login(self.request, user=user)
+
+        messages.success(self.request, 'Você foi logado com sucesso')
+
+        return redirect('product:cart')
 
 
 class Logout(View):
-    ...
+    def get(self, *args, **kwargs):
+        cart = copy.deepcopy(self.request.session.get('cart', {}))
+
+        logout(self.request)
+
+        self.request.session['cart'] = cart
+        self.request.session.save()
+
+        messages.success(self.request, 'Você foi deslogado com sucesso')
+        return redirect('product:list')

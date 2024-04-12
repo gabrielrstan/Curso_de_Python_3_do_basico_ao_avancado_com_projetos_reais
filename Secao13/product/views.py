@@ -4,6 +4,7 @@ from django.views.generic.detail import DetailView  # type: ignore
 from django.views import View  # type: ignore
 from django.contrib import messages  # type: ignore
 from product.models import Product, Variation
+from user.models import Profile
 
 
 class ProductList(ListView):
@@ -22,10 +23,6 @@ class ProductDetail(DetailView):
 
 class AddToCart(View):
     def get(self, *args, **kwargs):
-        # if self.request.session.get('cart'):
-        #     del self.request.session['cart']
-        #     self.request.session.save()
-
         http_referer = self.request.META.get(
             'HTTP_REFERER',
             reverse('product:list')
@@ -149,4 +146,28 @@ class Cart(View):
 
 
 class PurchaseSummary(View):
-    ...
+    def get(self, *args, **kwargs):
+        if not self.request.user.is_authenticated:
+            return redirect('user:create')
+
+        profile = Profile.objects.filter(user=self.request.user).exists()
+
+        if not profile:
+            messages.error(
+                self.request,
+                'Você precisa criar adicionar um perfil ao usuário.'
+            )
+            return redirect('user:create')
+
+        if not self.request.session.get('cart'):
+            messages.error(
+                self.request,
+                'Você precisa adicionar um produto ao seu carrinho.'
+            )
+            return redirect('product:list')
+
+        context = {
+            'user': self.request.user,
+            'cart': self.request.session['cart'],
+        }
+        return render(self.request, 'product/purchase_summary.html', context)
