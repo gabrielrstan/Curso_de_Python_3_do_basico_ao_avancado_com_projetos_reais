@@ -1,10 +1,11 @@
 import os
 
-from PIL import Image
 from django.conf import settings  # type: ignore
 from django.db import models  # type: ignore
-from utils.rands import slugify_new
+from PIL import Image
+
 from utils import utils
+from utils.rands import slugify_new
 
 
 class Product(models.Model):
@@ -17,7 +18,7 @@ class Product(models.Model):
     long_description = models.TextField(max_length=2000)
     image = models.ImageField(
         upload_to='product_image/%y/%m/', blank=True, null=True)
-    slug = models.SlugField(unique=True, blank=True, null=True)
+    slug = models.SlugField(unique=True, blank=True, null=True, max_length=100)
     marketing_price = models.FloatField(verbose_name='Price')
     promotional_marketing_price = models.FloatField(
         default=0, verbose_name='Promotional Price')
@@ -76,7 +77,8 @@ class Variation(models.Model):
         verbose_name = 'Variation'
         verbose_name_plural = 'Variations'
 
-    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    product = models.ForeignKey(
+        Product, on_delete=models.CASCADE)  # type:ignore
     name = models.CharField(max_length=50, blank=True, null=True)
     price = models.FloatField()
     promotional_price = models.FloatField(default=0)

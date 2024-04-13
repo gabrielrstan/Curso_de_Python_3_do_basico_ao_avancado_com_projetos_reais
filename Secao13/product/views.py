@@ -1,8 +1,13 @@
-from django.shortcuts import redirect, render, reverse, get_object_or_404  # type: ignore  # noqa - E501
-from django.views.generic.list import ListView  # type: ignore
-from django.views.generic.detail import DetailView  # type: ignore
-from django.views import View  # type: ignore
+
 from django.contrib import messages  # type: ignore
+from django.db.models import Q  # type: ignore
+from django.shortcuts import get_object_or_404  # type: ignore  # noqa - E501
+from django.shortcuts import redirect, render
+from django.urls import reverse  # type: ignore
+from django.views import View  # type: ignore
+from django.views.generic.detail import DetailView  # type: ignore
+from django.views.generic.list import ListView  # type: ignore
+
 from product.models import Product, Variation
 from user.models import Profile
 
@@ -12,6 +17,7 @@ class ProductList(ListView):
     template_name = 'product/list.html'
     context_object_name = 'products'
     paginate_by = 10
+    ordering = ['-id']
 
 
 class ProductDetail(DetailView):
@@ -71,9 +77,9 @@ class AddToCart(View):
             if variation_stock < cart_quantity:
                 messages.warning(
                     self.request,
-                    f'Insufficient stoke for {cart_quantity}x '
-                    f'on "{product_name}" product. We add {variation_stock}x'
-                    f'in your cart.'
+                    f'Estoque insuficiente para {cart_quantity}x '
+                    f'no produto "{product_name}". Adicionamos '
+                    f'{variation_stock}x no seu carrinho.'
                 )
                 cart_quantity = variation_stock
 
@@ -171,3 +177,24 @@ class PurchaseSummary(View):
             'cart': self.request.session['cart'],
         }
         return render(self.request, 'product/purchase_summary.html', context)
+
+
+class Search(ProductList):
+    def get_queryset(self, *args, **kwargs):
+        term = self.request.GET.get('term') or self.request.session['term']
+        qs = super().get_queryset(*args, **kwargs)
+
+        if not term:
+            return qs
+
+        self.request.session['term'] = term
+
+        qs = qs.filter(
+            Q(name__icontains=term) |
+            Q(short_description__icontains=term) |
+            Q(long_description__icontains=term)
+        )
+
+        self.request.session.save()
+
+        return qs

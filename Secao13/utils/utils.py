@@ -1,4 +1,5 @@
 def format_price(value):
+
     return f'R$ {value:.2f}'.replace('.', ',')
 
 
@@ -7,7 +8,7 @@ def cart_total_quantity(cart):
 
 
 def cart_total_price(cart):
-    return sum(
+    return round(sum(
         [
             item.get('promotional_quantitative_price')
             if item.get('promotional_quantitative_price')
@@ -15,4 +16,4 @@ def cart_total_price(cart):
             for item
             in cart.values()
         ]
-    )
+    ), 2)

@@ -1,7 +1,7 @@
 from django.urls import path  # type: ignore
-from product.views import (AddToCart, ProductList, PurchaseSummary, Cart,
-                           ProductDetail, RemoveFromCart)
 
+from product.views import (AddToCart, Cart, ProductDetail, ProductList,
+                           PurchaseSummary, RemoveFromCart, Search)
 
 app_name = 'product'
 
@@ -13,4 +13,5 @@ urlpatterns = [
     path('cart/', Cart.as_view(), name='cart'),
     path('purchase_summary/', PurchaseSummary.as_view(),
          name='purchasesummary'),
+    path('search/', Search.as_view(), name='search'),
 ]

@@ -1,4 +1,5 @@
 from django.contrib import admin  # type: ignore
+
 from product.models import Product, Variation
 
 

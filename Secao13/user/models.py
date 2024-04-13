@@ -1,8 +1,9 @@
 import re
 
-from django.db import models  # type: ignore
 from django.contrib.auth.models import User  # type: ignore
+from django.db import models  # type: ignore
 from django.forms import ValidationError  # type: ignore
+
 from utils.validacpf import valida_cpf
 
 
@@ -60,6 +61,16 @@ class Profile(models.Model):
 
     def clean(self):
         error_messages = {}
+
+        sent_cpf = self.cpf or None
+        saved_cpf = None
+        profile = Profile.objects.filter(cpf=sent_cpf).first()
+
+        if profile:
+            saved_cpf = profile.cpf
+
+            if saved_cpf is not None and self.pk != profile.pk:
+                error_messages['cpf'] = 'CPF já cadastrado.'
 
         if not valida_cpf(self.cpf):
             error_messages['cpf'] = 'CPF inválido.'

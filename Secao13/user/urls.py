@@ -1,5 +1,6 @@
 from django.urls import path  # type: ignore
-from user.views import Create, Update, Login, Logout
+
+from user.views import Create, Login, Logout, Update
 
 app_name = 'user'
 

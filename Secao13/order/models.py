@@ -1,5 +1,5 @@
-from django.db import models  # type: ignore
 from django.contrib.auth.models import User  # type: ignore
+from django.db import models  # type: ignore
 
 
 class Order(models.Model):
@@ -9,21 +9,22 @@ class Order(models.Model):
 
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     total = models.FloatField()
+    total_amount = models.PositiveIntegerField(default=0)
     status = models.CharField(
         default='C',
         max_length=1,
         choices=(
-            ('A', 'Approved'),
-            ('C', 'Created'),
-            ('D', 'Disapproved'),
-            ('P', 'Pending'),
-            ('S', 'Shipped'),
-            ('F', 'Finished'),
+            ('A', 'Aprovado'),
+            ('C', 'Criado'),
+            ('R', 'Reprovado'),
+            ('P', 'Pendente'),
+            ('E', 'Enviado'),
+            ('F', 'Finalizado'),
         )
     )
 
     def __str__(self):
-        return f'Order N. {self.pk}'
+        return f'Pedido N. {self.pk}'
 
 
 class OrderedItem(models.Model):

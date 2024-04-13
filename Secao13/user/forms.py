@@ -1,6 +1,7 @@
 from django import forms  # type:ignore
-from django.forms import ModelForm  # type:ignore
 from django.contrib.auth.models import User  # type:ignore
+from django.forms import ModelForm  # type:ignore
+
 from user.models import Profile
 
 

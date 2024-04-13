@@ -1,0 +1,13 @@
+{% extends "base.html" %} 
+{% load static %} 
+{% load filters %} 
+
+{% block title %}{{order}} | {% endblock title %}
+
+{% block content%}
+
+     
+    {% include "partials/_order.html" %}
+
+    
+{% endblock content %}

@@ -1,4 +1,5 @@
 from django.contrib import admin  # type: ignore
+
 from order.models import Order, OrderedItem
 
 

@@ -1,12 +1,14 @@
-from django.shortcuts import (render, get_object_or_404,  # type: ignore
-                              redirect)
-from django.views import View  # type: ignore
-from django.contrib.auth.models import User  # type: ignore
-from django.contrib.auth import authenticate, login, logout  # type: ignore
-from django.contrib import messages  # type: ignore
-from user.forms import UserForm, ProfileForm
-from user.models import Profile
 import copy
+
+from django.contrib import messages  # type: ignore
+from django.contrib.auth import authenticate, login, logout  # type: ignore
+from django.contrib.auth.models import User  # type: ignore
+from django.shortcuts import (get_object_or_404, redirect,  # type: ignore
+                              render)
+from django.views import View  # type: ignore
+
+from user.forms import ProfileForm, UserForm
+from user.models import Profile
 
 
 class ProfileBase(View):
@@ -41,10 +43,10 @@ class ProfileBase(View):
         if self.request.user.is_authenticated:
             self.template_name = 'user/update.html'
 
-        self.render = render(self.request, self.template_name, self.context)
+        self.render_ = render(self.request, self.template_name, self.context)
 
     def get(self, *args, **kwargs):
-        return self.render
+        return self.render_
 
 
 class Create(ProfileBase):
@@ -54,7 +56,7 @@ class Create(ProfileBase):
                 self.request,
                 'Por favor, preencha os campos corretamente.'
             )
-            return self.render
+            return self.render_
 
         username = self.userform.cleaned_data.get('username')
         password = self.userform.cleaned_data.get('password')
