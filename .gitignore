@@ -9,6 +9,7 @@ Secao12/data
 Secao13/projeto-ecommerce.zip
 media/
 /data/
+*/*.pdf
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
