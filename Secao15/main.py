@@ -1,3 +1,4 @@
+# https://www.youtube.com/watch?v=2j_Q1k75tIo
 # uma_string: str = 'Um valor'
 # um_inteiro: int = 0
 # um_float: float = 0.0
