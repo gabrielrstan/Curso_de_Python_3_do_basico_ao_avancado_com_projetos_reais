@@ -1,4 +1,4 @@
-COMANDOS DA SEÇÃO 22 <\br>
+COMANDOS DA SEÇÃO 22 <br>
 LINK: [https://www.youtube.com/watch?v=UQBAytRBNiM](https://www.youtube.com/watch?v=UQBAytRBNiM)
 
 # Se você usa MacOS
