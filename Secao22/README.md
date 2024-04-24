@@ -1,5 +1,5 @@
 COMANDOS DA SEÇÃO 22
-LINK:[https://www.youtube.com/watch?v=UQBAytRBNiM](https://www.youtube.com/watch?v=UQBAytRBNiM)
+LINK: [https://www.youtube.com/watch?v=UQBAytRBNiM](https://www.youtube.com/watch?v=UQBAytRBNiM)
 
 # Se você usa MacOS
 O macOs roda sobre Darwin OS (kernel XNU), que é um sistema UNIX-like. Então, 
